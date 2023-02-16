@@ -9,3 +9,27 @@
 // 4b  num = [9]
 // find num in bets array return true or false
 // log the array position in bets [][]
+
+
+
+
+
+
+
+
+// Task 1 
+// write a program to push 3 random numbers from 0 - 9 to an Array
+// const draws [] every 1 minute
+// display the draws in the browser
+// Put a button on the web page
+// onClick of the button  reset the drawing numbers to whatever 
+// number is passed in as a parameter to the function
+
+// Task 2
+// given this Array of numbers [0,1,2,3,4,5,6,7,8,9]
+// copy each of the numbers into a new array [[0],[1], ...]
+
+// Task 3
+// Make an Api call to  https://jsonplaceholder.typicode.com/posts every 1 minute
+// display the results in the browser in a tabular form
+// Using Promise
