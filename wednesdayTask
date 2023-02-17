@@ -33,3 +33,13 @@
 // Make an Api call to  https://jsonplaceholder.typicode.com/posts every 1 minute
 // display the results in the browser in a tabular form
 // Using Promise
+
+
+
+//Task for friday
+// given a function that accepts an input as parameter
+// if the input is divisible by 3 and 5 return "FizzBuzz"
+// if the input is divisible by 3 return "Fizz"
+// if the input is divisible by 5 return "Buzz"
+// if the input is not divisible by 3 or 5 or 3 and 5 return  input
+// if the input is not a number or integer retun NaN
