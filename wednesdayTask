@@ -29,6 +29,7 @@
 // given this Array of numbers [0,1,2,3,4,5,6,7,8,9]
 // copy each of the numbers into a new array [[0],[1], ...]
 
+
 // Task 3
 // Make an Api call to  https://jsonplaceholder.typicode.com/posts every 1 minute
 // display the results in the browser in a tabular form
@@ -90,4 +91,5 @@
 // if you select 6 numbers you get 30 as the total bet
 // Write a function to calculate the total bet
 // using this sample
+AIzaSyAy9xR_ioh6A7CZdMDsSaVm0xkaBhTaMU8
 
