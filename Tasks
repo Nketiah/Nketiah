@@ -41,4 +41,22 @@ PASSWORD=32cf1977ef97fb
 FRONT_END_URL=http://127.0.0.1:3000
 
 
+
+
+
+
+# Update these with your Supabase details from your project settings > API
+NEXT_PUBLIC_SUPABASE_URL=https://varakvklwoaebitazwci.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhcmFrdmtsd29hZWJpdGF6d2NpIiwicm9sZSI6ImFub24iLCJpYXQiOjE2ODgxMzAyNTYsImV4cCI6MjAwMzcwNjI1Nn0.pD88-7WQQeDlngLGgq2x6RwZc3Oz03yoz0l7mVqivQQ
+SUPABASE_SERVICE_ROLE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZhcmFrdmtsd29hZWJpdGF6d2NpIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTY4ODEzMDI1NiwiZXhwIjoyMDAzNzA2MjU2fQ.osHuh9QqPnczinnPy7idIeyfTuwGBN-B9hKxksyBswI
+
+
+#DB PASS=h5GV54jtYXIiMCQA
+
+# Update these with your Stripe credentials from https://dashboard.stripe.com/apikeys
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=
+STRIPE_SECRET_KEY=
+STRIPE_WEBHOOK_SECRET=
+
+
 <div style="max-width:700px;margin-bottom:1rem;display:flex;align-items:center;gap:10px;font-family:Roboto;font-weight:600;color:#3b5998"><img src="https://res.cloudinary.com/dmhcnhtng/image/upload/v1645134414/logo_cs1si5.png" alt="" style="width:30px"><span>Action require : Activate your socialab account</span></div><div style="padding:1rem 0;border-top:1px solid #e5e5e5;border-bottom:1px solid #e5e5e5;color:#141823;font-size:17px;font-family:Roboto"><span>Hello ${name}</span><div style="padding:20px 0"><span style="padding:1.5rem 0">You recently created an account on Socialab. To complete your registration, please confirm your account.</span></div><a href="${url}" style="width:200px;padding:10px 15px;background:#4c649b;color:#fff;text-decoration:none;font-weight:600">Confirm your account</a><br><div style="padding-top:20px"><span style="margin:1.5rem 0;color:#898f9c">Socialab allows you to stay in touch with all your friends, once registered on socialab, you can share photos,organize events and much more.</span></div></div>
