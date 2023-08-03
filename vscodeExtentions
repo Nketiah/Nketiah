@@ -29,3 +29,625 @@
 // Doxygen Documentation Generator  ===> Christoph Schlosser
 // Prisma   ===> Prisma
 // TODO Highlight  ===>
+
+
+
+
+
+
+
+
+import React, { useState } from 'react'
+import { TfiPencilAlt } from "react-icons/tfi"
+import { BiUser } from "react-icons/bi"
+import { RiDeleteBin2Line } from "react-icons/ri"
+import { createStyles, Box, TextInput, Flex, Tooltip, FileInput, Select, Avatar } from '@mantine/core'
+import { useDisclosure } from '@mantine/hooks'
+import { Modal, Button, Group, Checkbox } from '@mantine/core'
+import ViewStudentModal from './ViewStudentModal'
+import { Controller, useForm } from 'react-hook-form'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { z } from 'zod'
+import { UpdateStudentSchema } from '@/validations/student'
+import dayjs from 'dayjs'
+import { DateInput, YearPickerInput } from '@mantine/dates'
+import { IconCalendar } from '@tabler/icons-react'
+import { utils } from '@/utils'
+
+
+
+const useStyles = createStyles((theme) => ({
+  editIcon: {
+    cursor: "pointer",
+    color: theme.colors.dark[2]
+  },
+  actions: {
+    display: "flex",
+    gap: 6
+  },
+  iconColor: {
+    color: theme.colors.blue[6]
+  },
+  logingAvatar: {
+    width: 100,
+    height: 100,
+    borderRadius: "50%",
+    overflow: "hidden",
+  },
+  centerPhoto: {
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    marginBottom: 20
+  },
+}))
+
+
+
+
+
+type UpdateStudentData = z.infer<typeof UpdateStudentSchema>
+
+
+const EditStudentIcon = ({ row }: { row: Student }) => {
+
+  const [opened, { open, close }] = useDisclosure(false)
+  const [modalOpened, { open: modalOpen, close: modalClose }] = useDisclosure(false)
+  const [modalOpenedDel, { open: modalOpenDel, close: modalCloseDel }] = useDisclosure(false)
+  const [admissionDate, setAdmissionDate] = useState<Date | null>(new Date())
+  const [academicYear, setAcademicYear] = useState<Date | null>(new Date())
+  const [dob, setDob] = useState<Date | null>(new Date())
+  const [photo, setPhoto] = useState<File | null>()
+  const { classes } = useStyles()
+
+
+  const { register, control, handleSubmit, formState, reset: formReset } =
+    useForm<UpdateStudentData>({
+      resolver: zodResolver(UpdateStudentSchema),
+    })
+
+  const { errors, isDirty, isValid } = formState
+
+
+  const handleModalOpen = () => {
+    open()
+    console.log("Selected Row: ", row)
+  }
+
+  const handleViewStudent = () => {
+    modalOpen()
+  }
+
+  const handleStudentDelete = () => {
+    modalOpenDel()
+  }
+
+  const onSubmit = (userData: UpdateStudentData) => {
+    const admiDateInput = dayjs(admissionDate)
+    const inputYear = dayjs(academicYear, { locale: 'en' })
+    const year = inputYear.year()
+    const admiInputDate = admiDateInput.format('DD/MM/YY')
+    const dobInput = dayjs(dob)
+    const formattedDob = dobInput.format('DD/MM/YY')
+    const newData = {
+      ...userData,
+      admissionDate: admiInputDate,
+      academicYear: year,
+      dob: formattedDob,
+      gender: !userData.gender ? row.user.gender : userData.gender,
+      klass: !userData.klass ? row.klass : userData.klass,
+      section: !userData.section ? row.section : userData.section,
+    }
+
+    console.log("Student Data: ", newData)
+  }
+
+
+  return (
+    <>
+      <Box className={classes.actions}>
+        <Tooltip label={`Edit ${row.user.firstName}`} withArrow>
+          <Box>
+            <TfiPencilAlt
+              size={20}
+              className={classes.editIcon}
+              onClick={handleModalOpen}
+            />
+          </Box>
+        </Tooltip>
+        <Tooltip label={`View ${row.user.firstName} Information`} withArrow>
+          <Box>
+            <BiUser
+              size={20}
+              className={classes.editIcon}
+              onClick={handleViewStudent}
+            />
+          </Box>
+        </Tooltip>
+        <Tooltip label={`Delete ${row.user.firstName}`} withArrow>
+          <Box>
+            <RiDeleteBin2Line
+              size={20}
+              className={classes.editIcon}
+              onClick={handleStudentDelete}
+            />
+          </Box>
+        </Tooltip>
+      </Box>
+      <form>
+        <Modal
+          opened={opened}
+          onClose={close}
+          title={`${row.user.firstName + "'s" + ' '}  Details`}
+          radius="xs"
+          size="xl"
+          closeOnClickOutside={false}
+          closeOnEscape={false}
+          fullScreen
+          transitionProps={{ transition: 'fade', duration: 200 }}
+        >
+          <Box className={classes.centerPhoto}>
+            <Avatar
+              src={row.photo}
+              className={classes.logingAvatar}
+              alt="Photo"
+            />
+          </Box>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+          >
+            {/* <FileInput
+                label="Student's Photo"
+                required
+                value={photo}
+                onChange={setPhoto}
+                radius={'xs'}
+                w={230}
+              /> */}
+            <Box>
+              <YearPickerInput
+                icon={<IconCalendar size="1rem" stroke={1.5} />}
+                label="Academic Year"
+                value={academicYear}
+                onChange={setAcademicYear}
+                withAsterisk
+                radius={'xs'}
+                w={230}
+              />
+            </Box>
+            <Box>
+              <DateInput
+                label="Admission Date"
+                valueFormat="DD/MM/YYYY"
+                onChange={setAdmissionDate}
+                value={admissionDate}
+                withAsterisk
+                radius={'xs'}
+                readOnly
+                w={230}
+              />
+            </Box>
+            <Box>
+              <Controller
+                name="gender"
+                control={control}
+                render={({ field }) => (
+                  <Select
+                    label="Gender"
+                    defaultValue={row.user.gender}
+                    required
+                    data={['Male', 'Female']}
+                    value={field.value}
+                    onChange={(value) => field.onChange(value)}
+                    error={errors.gender && errors.gender.message}
+                    sx={{
+                      marginTop: `${errors.gender ? '1rem' : '0'}`,
+                    }}
+                    radius="xs"
+                    w={230}
+                  />
+                )}
+              />
+            </Box>
+          </Flex>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+          >
+            <TextInput
+              label="First Name"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.user.firstName}
+              {...register("firstName")}
+            />
+            <TextInput
+              label="Middle Name"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.user?.middleName!}
+              {...register("middleName")}
+            />
+            <TextInput
+              label="Last Name"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.user.lastName}
+              {...register("lastName")}
+            />
+          </Flex>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+            mt={20}
+          >
+            <TextInput
+              label="SurName"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.user.surname}
+              {...register("surname")}
+            />
+            <TextInput
+              label="Other Name"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.user.otherName!}
+              {...register("otherName")}
+            />
+            <TextInput
+              label="Role"
+              required
+              radius={'xs'}
+              w={230}
+              readOnly
+              value={row.user.role}
+            />
+          </Flex>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+            mt={20}
+          >
+            <Controller
+              name="klass"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="Class/Grade"
+                  required
+                  placeholder="Pick One"
+                  data={utils.getStudentGrade()}
+                  defaultValue={row.klass}
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                  radius="xs"
+                  w={230}
+                />
+              )}
+            />
+            <Controller
+              name="bloodGroup"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="Blood Group"
+                  required
+                  placeholder="Pick One"
+                  data={['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']}
+                  defaultValue={row.klass}
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                  radius="xs"
+                  w={230}
+                />
+              )}
+            />
+            <Controller
+              name="dayOrBoarding"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="Day/Boarding"
+                  required
+                  placeholder="Pick One"
+                  data={['Day', 'Boarding']}
+                  defaultValue={row.klass}
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                  radius="xs"
+                  w={230}
+                />
+              )}
+            />
+          </Flex>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+            mt={20}
+          >
+            <TextInput
+              label="Father's Address"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.fatherAddress!}
+              {...register("fatherAddress")}
+            />
+            <TextInput
+              label="Father's Email"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.fatherEmail!}
+              {...register("fatherEmail")}
+            />
+            <TextInput
+              label="Father's Occupation"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.fatherOccupation!}
+              {...register("fatherOccupation")}
+            />
+          </Flex>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+            mt={20}
+          >
+            <TextInput
+              label="Mother's Address"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.motherAddress!}
+              {...register("motherAddress")}
+            />
+            <TextInput
+              label="Mother's Email"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.motherEmail!}
+              {...register("motherEmail")}
+            />
+            <TextInput
+              label="Mother's Occupation"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.motherOccupation!}
+              {...register("motherOccupation")}
+            />
+          </Flex>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+            mt={20}
+          >
+            <TextInput
+              label="Mother's Name"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.motherName!}
+              {...register("motherName")}
+            />
+            <TextInput
+              label="Father's Name"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.fatherName!}
+              {...register("fatherName")}
+            />
+            <TextInput
+              label="Mother's Mobile"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.motherMobile!}
+              {...register("motherMobile")}
+            />
+          </Flex>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+            mt={20}
+          >
+            <TextInput
+              label="Physical Deficiency"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.health!}
+              {...register("health")}
+            />
+            <TextInput
+              label="Guardian Email Address"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.guardianEmail!}
+              {...register("guardianEmail")}
+            />
+            <TextInput
+              label="Father's Mobile"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.fatherMobile!}
+              {...register("fatherMobile")}
+            />
+          </Flex>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+            mt={20}
+          >
+            <TextInput
+              label="Guardian  Mobile"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.guardianMobile!}
+              {...register("guardianMobile")}
+            />
+            <TextInput
+              label="Guardian Full Name"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.guardianName!}
+              {...register("guardianName")}
+            />
+            <TextInput
+              label="Guardian Address"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.guardianAddress!}
+              {...register("guardianAddress")}
+            />
+          </Flex>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+            mt={20}
+          >
+            <Checkbox
+              label="Is Graduated"
+              radius={'xs'}
+              w={230}
+              defaultChecked={row.isGraduated!}
+              {...register("isGraduated")}
+            />
+            <Checkbox
+              label="Is Suspended"
+              radius={'xs'}
+              w={230}
+              defaultChecked={row.isSuspended!}
+              {...register("isSuspended")}
+            />
+
+            <Checkbox
+              label="Is Withdrawn"
+              radius={'xs'}
+              w={230}
+              defaultChecked={row.isWithdrawn!}
+              {...register("isWithdrawn")}
+            />
+          </Flex>
+          <Flex
+            direction={{ base: 'column', sm: 'row' }}
+            gap={{ base: 'sm', sm: 'lg' }}
+            justify={{ sm: 'center' }}
+            mt={20}
+          >
+            <TextInput
+              label="Health"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.health!}
+              {...register("health")}
+            />
+            <TextInput
+              label="Allergies"
+              required
+              radius={'xs'}
+              w={230}
+              value={row.allergies!}
+              {...register("allergies")}
+            />
+            <Controller
+              name="section"
+              control={control}
+              render={({ field }) => (
+                <Select
+                  label="Section"
+                  required
+                  placeholder="Pick One"
+                  data={['A', 'B', 'C', 'D']}
+                  defaultValue={row.section}
+                  value={field.value}
+                  onChange={(value) => field.onChange(value)}
+                  radius="xs"
+                  w={230}
+                />
+              )}
+            />
+          </Flex>
+
+          <Box mt={20}>
+            <Group position="right">
+              <Button variant="light" onClick={close}>
+                Cancel
+              </Button>
+              <Button
+                variant="filled"
+                onClick={handleSubmit(onSubmit)}
+                color="blue">
+                Update
+              </Button>
+            </Group>
+          </Box>
+        </Modal>
+      </form>
+      <Modal
+        opened={modalOpened}
+        onClose={modalClose}
+        title={`${row.user.firstName + "'s" + ' '}  Profile`}
+        radius="xs"
+        size="xl"
+        closeOnClickOutside={false}
+        closeOnEscape={false}
+        fullScreen
+        transitionProps={{ transition: 'fade', duration: 200 }}
+      >
+        <ViewStudentModal student={row} />
+      </Modal>
+      <Modal
+        opened={modalOpenedDel}
+        onClose={modalCloseDel}
+        title={`Delete ${row.user.firstName}`}
+        radius="xs"
+        size="md"
+        closeOnClickOutside={false}
+        closeOnEscape={false}
+        mt={100}
+      >
+        Are you sure you want to delete {row.user.firstName}?
+        <Box mt={20}>
+          <Group position="right">
+            <Button variant="light" onClick={modalCloseDel}>
+              Cancel
+            </Button>
+            <Button variant="filled" color="red">
+              Delete
+            </Button>
+          </Group>
+        </Box>
+      </Modal>
+    </>
+  )
+}
+
+export default EditStudentIcon
