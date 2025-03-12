@@ -52,22 +52,4 @@
 
 ---
 
-### 📊 GitHub Stats  
 
-![Your GitHub Stats](https://github-readme-stats.vercel.app/api?username=dollarstir&show_icons=true&theme=radical)  
-
-![GitHub Streak](https://github-readme-streak-stats.herokuapp.com/?user=dollarstir&theme=radical)  
-
----
-
-### 📫 Connect with Me  
-
-<a href="https://www.linkedin.com/in/frederick-ennin-47965112a" target="_blank" rel="noreferrer">
-<img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/linkedin.svg" width="32" height="32" />
-</a>
-<a href="https://stackoverflow.com/users/19121428/frederick-ennin" target="_blank" rel="noreferrer">
-<img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/stackoverflow.svg" width="32" height="32" />
-</a>
-<a href="mailto:nketiahjoseph1@gmail.com">
-<img src="https://raw.githubusercontent.com/danielcranney/readme-generator/main/public/icons/socials/gmail.svg" width="32" height="32" />
-</a>
