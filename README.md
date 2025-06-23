@@ -42,7 +42,7 @@
 
 ### 🚀 Tools & Technologies  
 
-- **.NET Core / .NET 6+**  
+- **.NET Core / .NET 8+**  
 - **ASP.NET Core (Web API, MVC, Razor Pages)**  
 - **Entity Framework Core & Dapper**  
 - **SQL Server (Stored Procedures, Performance Optimization)**  
